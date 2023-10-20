@@ -1,3 +1,6 @@
+pub const LEAST_AD: i32 = 1944;
+pub const LEAST_BS: i32 = 2000;
+pub const MAX_AD: i32 = 2033;
 pub const NEPALI_YEARS_AND_DAYS_IN_MONTHS: [[i32; 13]; 91] = [
     [2000, 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
     [2001, 31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],

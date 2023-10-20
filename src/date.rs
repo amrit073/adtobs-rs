@@ -1,4 +1,4 @@
-use crate::dump;
+use crate::dump::{self, LEAST_AD, LEAST_BS, MAX_AD};
 use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, TimeZone, Utc};
 use chrono_tz::Asia::Kathmandu;
 
@@ -17,14 +17,17 @@ fn is_leap_year(year: i32) -> bool {
 }
 
 fn check_if_date_is_in_range(year: i32, month: u32, day: u32) -> bool {
-    if year < 1944 || year > 2033 {
+    if year < LEAST_AD || year > MAX_AD {
         return false;
     }
     if month < 1 || month > 12 {
         return false;
     }
+    if day < 1 || day > 31 {
+        return false;
+    }
 
-    !(day < 1 || day > 31)
+    return true;
 }
 
 fn get_english_month(month: i32) -> String {
@@ -70,8 +73,6 @@ fn convert_english_date_to_nepali<T: HasDate>(date: &T) -> String {
     let month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     let leap_year_months = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-    let def_eyy = 1944;
-    let def_nyy = 2000;
     let def_nmm = 9;
     let def_ndd = 17 - 1;
     let mut total_e_days = 0;
@@ -80,8 +81,8 @@ fn convert_english_date_to_nepali<T: HasDate>(date: &T) -> String {
     let mut i;
     let mut j;
 
-    for i in 0..(yy - def_eyy) {
-        if is_leap_year(def_eyy + i) {
+    for i in 0..(yy - LEAST_AD) {
+        if is_leap_year(LEAST_AD + i) {
             for j in 0..12 {
                 total_e_days += leap_year_months[j];
             }
@@ -106,7 +107,7 @@ fn convert_english_date_to_nepali<T: HasDate>(date: &T) -> String {
     j = def_nmm;
     let mut total_n_days = def_ndd;
     let mut m = def_nmm;
-    let mut y = def_nyy;
+    let mut y = LEAST_BS;
     let mut a: i32;
 
     while total_e_days != 0 {
