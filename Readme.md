@@ -17,8 +17,8 @@ Add this crate to your `Cargo.toml`:
 adtobs = "0.1.0"
 ```
 
-### Examples
-# Get Today's Nepali Date
+## Examples
+### Get Today's Nepali Date
 ```rust
 use adtobs::get_todays_np_date;
 
@@ -26,7 +26,7 @@ let nepali_date = get_todays_np_date();
 println!("Today's Nepali Date: {}", nepali_date);
 ```
 
-# Convert Gregorian Date to Nepali Date
+### Convert Gregorian Date to Nepali Date
 ```rust
 use adtobs::convert_ad_to_bs;
 
@@ -34,7 +34,7 @@ let nepali_date = convert_ad_to_bs(2023, 11, 29);
 println!("Nepali Date: {}", nepali_date);
 ```
 
-# Convert UTC String to Nepali Date
+### Convert UTC String to Nepali Date
 ```rust
 use adtobs::convert_utc_to_bs;
 
@@ -43,5 +43,5 @@ let nepali_date = convert_utc_to_bs(utc_date);
 println!("Nepali Date: {}", nepali_date);
 ```
 
-# License
+### License
 This project is licensed under the GNU General Public License v3.0
