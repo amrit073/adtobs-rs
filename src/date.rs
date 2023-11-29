@@ -1,8 +1,7 @@
 use crate::dump::{self, LEAST_AD, LEAST_BS, MAX_AD};
-use chrono::{DateTime, Datelike, NaiveDate, NaiveDateTime, TimeZone, Utc};
-use chrono_tz::Asia::Kathmandu;
+use chrono::{DateTime, Datelike, NaiveDateTime, TimeZone};
 
-trait HasDate {
+pub trait HasDate {
     fn get_year(&self) -> i32;
     fn get_month(&self) -> u32;
     fn get_day(&self) -> u32;
@@ -62,7 +61,7 @@ fn get_english_day_of_week_in_string(day: i32) -> String {
     }
 }
 
-fn convert_english_date_to_nepali<T: HasDate>(date: &T) -> String {
+pub fn convert_english_date_to_nepali<T: HasDate>(date: &T) -> String {
     let yy = date.get_year();
     let mm = date.get_month();
     let dd = date.get_day();
@@ -134,7 +133,7 @@ fn convert_english_date_to_nepali<T: HasDate>(date: &T) -> String {
     }
 
     let date_string = format!(
-        "{} {} {}, {}\n",
+        "{} {} {}, {}",
         y,
         get_english_month(m),
         total_n_days,
@@ -169,24 +168,4 @@ impl HasDate for NaiveDateTime {
     fn get_day(&self) -> u32 {
         self.day()
     }
-}
-
-pub fn get_todays_np_date() -> String {
-    let today = Utc::now().with_timezone(&Kathmandu);
-    convert_english_date_to_nepali(&today)
-}
-
-pub fn convert_ad_to_bs(year: i32, month: u32, day: u32) -> String {
-    let date = NaiveDate::from_ymd_opt(year, month, day)
-        .unwrap()
-        .and_hms_opt(0, 0, 0)
-        .unwrap();
-    convert_english_date_to_nepali(&date)
-}
-
-pub fn convert_utc_to_bs(utc_string: &str) -> String {
-    let date = Utc::datetime_from_str(&Utc, utc_string, "%+")
-        .unwrap()
-        .with_timezone(&Kathmandu);
-    convert_english_date_to_nepali(&date)
 }
