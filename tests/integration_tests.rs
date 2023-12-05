@@ -6,7 +6,7 @@ use adtobs::{convert_ad_to_bs, convert_utc_to_bs, get_todays_np_date};
 fn test_get_todays_np_date() {
     // Test get_todays_np_date function
     let today = get_todays_np_date();
-    assert!(today.len() > 0); // Assuming a non-empty string is returned
+    assert!(!today.is_empty()); // Assuming a non-empty string is returned
 }
 
 #[test]

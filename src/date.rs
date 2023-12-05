@@ -9,28 +9,28 @@ pub trait HasDate {
 
 fn is_leap_year(year: i32) -> bool {
     if year % 100 == 0 {
-        return year % 400 == 0;
+        year % 400 == 0
     } else {
-        return year % 4 == 0;
+        year % 4 == 0
     }
 }
 
 fn check_if_date_is_in_range(year: i32, month: u32, day: u32) -> bool {
-    if year < LEAST_AD || year > MAX_AD {
+    if !(LEAST_AD..=MAX_AD).contains(&year) {
         return false;
     }
-    if month < 1 || month > 12 {
+    if !(1..=12).contains(&month) {
         return false;
     }
-    if day < 1 || day > 31 {
+    if !(1..=31).contains(&day) {
         return false;
     }
 
-    return true;
+    true
 }
 
 fn get_english_month(month: i32) -> String {
-    let english_month = match month {
+    match month {
         1 => "Baisakh".to_string(),
         2 => "Jesth".to_string(),
         3 => "Asar".to_string(),
@@ -44,8 +44,7 @@ fn get_english_month(month: i32) -> String {
         11 => "Falgun".to_string(),
         12 => "Chaitra".to_string(),
         _ => "".to_string(),
-    };
-    english_month
+    }
 }
 
 fn get_english_day_of_week_in_string(day: i32) -> String {
@@ -82,12 +81,12 @@ pub fn convert_english_date_to_nepali<T: HasDate>(date: &T) -> String {
 
     for i in 0..(yy - LEAST_AD) {
         if is_leap_year(LEAST_AD + i) {
-            for j in 0..12 {
-                total_e_days += leap_year_months[j];
+            for days in &leap_year_months {
+                total_e_days += days;
             }
         } else {
-            for j in 0..12 {
-                total_e_days += month[j];
+            for days in &month {
+                total_e_days += days;
             }
         }
     }
