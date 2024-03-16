@@ -1,16 +1,13 @@
 name: Read Env Var and Print
 
 on:
-  dispatch:
-    inputs:
-      env_variable:
-        description: 'Environment variable name'
-        required: true
+  workflow_dispatch:
 
 jobs:
   print_env_var:
     runs-on: ubuntu-latest
+    environment: test
     steps:
       - name: Print Environment Variable
         run: |
-          echo "Environment Variable Value: ${{ env.${{ github.event.inputs.env_variable }} }}"
+          echo "Environment Variable Value: ${{ vars.a }}"
