@@ -1,7 +1,7 @@
 name: Read Env Var and Print
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   print_env_var:
