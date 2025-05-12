@@ -1,7 +1,7 @@
 [package]
 name = "adtobs"
 description = "A Rust crate for effortless conversion of dates between the Gregorian (English) calendar and the Nepali calendar (Bikram Sambat)."
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 license = "GPL-3.0"
 repository = "https://github.com/amrit073/adtobs-rs"
