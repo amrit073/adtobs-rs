@@ -14,7 +14,7 @@ Add this crate to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-adtobs = "0.1.0"
+adtobs = "0.1.3"
 ```
 
 ## Examples
