@@ -1,47 +1,96 @@
 # Nepali Date Converter
 
-A Rust crate for converting dates from the Gregorian calendar to the Nepali calendar (Bikram Sambat).
+A Rust crate for converting dates from the Gregorian calendar to the Nepali
+calendar (Bikram Sambat).
 
 ## Features
 
-- `get_todays_np_date`: Get today's date in the Nepali calendar.
-- `convert_ad_to_bs`: Convert a Gregorian (English) date to a Nepali date.
-- `convert_utc_to_bs`: Convert a UTC date string to a Nepali date.
+- `NepaliDate` — strongly-typed BS date with `year`, `month`, `day`, and
+  `weekday` accessors plus a `Display` impl.
+- Convert in both directions: AD → BS from `(y, m, d)`, a
+  `chrono::NaiveDate`, or an RFC 3339 timestamp string; BS → AD via
+  `NepaliDate::from_bs_ymd` and `NepaliDate::to_gregorian`.
+- Errors are returned via `Result<_, NepaliDateError>` rather than panicking
+  or returning sentinel strings.
+- Just two transitive dependencies: `chrono` and `num-traits`.
 
 ## Usage
 
-Add this crate to your `Cargo.toml`:
-
 ```toml
 [dependencies]
-adtobs = "0.1.4"
+adtobs = "0.2"
 ```
 
 ## Examples
-### Get Today's Nepali Date
-```rust
-use adtobs::get_todays_np_date;
 
-let nepali_date = get_todays_np_date();
-println!("Today's Nepali Date: {}", nepali_date);
+### Today's Nepali date
+
+```rust
+use adtobs::NepaliDate;
+
+let today = NepaliDate::today();
+println!("Today is {today}");
+println!("year={}, month={}, day={}", today.year(), today.month(), today.day());
 ```
 
-### Convert Gregorian Date to Nepali Date
-```rust
-use adtobs::convert_ad_to_bs;
+### Convert a Gregorian (year, month, day)
 
-let nepali_date = convert_ad_to_bs(2023, 11, 29);
-println!("Nepali Date: {}", nepali_date);
+```rust
+use adtobs::{Month, NepaliDate};
+
+let bs = NepaliDate::from_gregorian_ymd(2023, 11, 29).unwrap();
+assert_eq!(bs.year(), 2080);
+assert_eq!(bs.month(), Month::Mangsir);
+assert_eq!(bs.day(), 13);
+assert_eq!(bs.to_string(), "2080 Mangsir 13, Wednesday");
 ```
 
-### Convert UTC String to Nepali Date
-```rust
-use adtobs::convert_utc_to_bs;
+### Convert from a `chrono::NaiveDate`
 
-let utc_date = "2023-11-29T12:00:00Z";
-let nepali_date = convert_utc_to_bs(utc_date);
-println!("Nepali Date: {}", nepali_date);
+```rust
+use adtobs::NepaliDate;
+use chrono::NaiveDate;
+
+let nd = NaiveDate::from_ymd_opt(2023, 11, 29).unwrap();
+let bs = NepaliDate::try_from(nd).unwrap();
+println!("{bs}");
 ```
 
-### License
-This project is licensed under the GNU General Public License v3.0
+### Parse an RFC 3339 / ISO 8601 timestamp
+
+The instant is interpreted in Nepal Time (UTC+05:45) before conversion.
+
+```rust
+use adtobs::NepaliDate;
+
+let bs: NepaliDate = "2023-11-29T12:00:00Z".parse().unwrap();
+assert_eq!(bs.to_string(), "2080 Mangsir 13, Wednesday");
+```
+
+### Convert a Nepali date back to Gregorian
+
+```rust
+use adtobs::NepaliDate;
+use chrono::NaiveDate;
+
+let bs = NepaliDate::from_bs_ymd(2080, 8, 13).unwrap();
+let ad: NaiveDate = bs.into(); // or bs.to_gregorian()
+assert_eq!(ad, NaiveDate::from_ymd_opt(2023, 11, 29).unwrap());
+```
+
+The supported BS year range is 2000..=2090.
+
+## Backwards compatibility
+
+The old free functions still work but are deprecated and will be removed in
+a future major release:
+
+| Deprecated                            | Replacement                                   |
+| ------------------------------------- | --------------------------------------------- |
+| `get_todays_np_date()`                | `NepaliDate::today().to_string()`             |
+| `convert_ad_to_bs(y, m, d)`           | `NepaliDate::from_gregorian_ymd(y, m, d)`     |
+| `convert_utc_to_bs(s)`                | `NepaliDate::from_rfc3339(s)` / `s.parse()`   |
+
+## License
+
+This project is licensed under the GNU General Public License v3.0.
